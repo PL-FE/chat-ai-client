@@ -3,20 +3,31 @@
     <image class="logo" src="/static/logo.png"></image>
     <view class="text-area">
       <text class="title">{{ title }}</text>
+      <input v-model="msg" />
+      <button @click="sendMsg">发送</button>
     </view>
   </view>
 </template>
 
 <script>
+import { postChat } from "../../request/api";
+
 export default {
   data() {
     return {
-      title: 'Hello',
-    }
+      title: "",
+      msg: "",
+    };
   },
   onLoad() {},
-  methods: {},
-}
+  methods: {
+    sendMsg() {
+      postChat({ content: this.msg }).then((res) => {
+        this.title = res;
+      });
+    },
+  },
+};
 </script>
 
 <style>
