@@ -8,9 +8,12 @@
     "build:mp-weixin": "uni build -p mp-weixin"
   },
   "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-alpha-3040320220324001",
     "@dcloudio/uni-components": "3.0.0-4010520240507001",
     "@dcloudio/uni-h5": "3.0.0-4010520240507001",
     "@dcloudio/uni-mp-weixin": "3.0.0-4010520240507001",
+    "@dcloudio/uni-ui": "^1.5.5",
+    "@vue/server-renderer": "3.4.21",
     "vue": "^3.4.21"
   },
   "devDependencies": {
@@ -19,7 +22,14 @@
     "@dcloudio/uni-cli-shared": "3.0.0-4010520240507001",
     "@dcloudio/uni-stacktracey": "3.0.0-4010520240507001",
     "@dcloudio/vite-plugin-uni": "3.0.0-4010520240507001",
+    "@uni-helper/vite-plugin-uni-tailwind": "^0.15.0",
     "@vue/runtime-core": "^3.4.21",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "postcss-preset-env": "^9.5.14",
+    "sass": "^1.77.4",
+    "sass-loader": "^10.5.2",
+    "tailwindcss": "^3.4.3",
     "vite": "5.2.8"
   }
 }

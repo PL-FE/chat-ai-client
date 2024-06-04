@@ -1,59 +1,75 @@
 <template>
-  <view class="content">
-    <image class="logo" src="/static/logo.png"></image>
-    <view class="text-area">
-      <text class="title">{{ title }}</text>
-      <input v-model="msg" />
-      <button @click="sendMsg">发送</button>
+  <view class="page-content h-fit">
+    <scroll-view class="chat-content" scroll-y>
+      <view
+        v-for="(message, index) in messages"
+        :key="index"
+        class="message-item"
+      >
+        <view v-if="message.type === 'sent'" class="sent-message">{{
+          message.content
+        }}</view>
+        <view v-else class="received-message">{{ message.content }}</view>
+      </view>
+    </scroll-view>
+    <view class="footer absolute bottom-0 w-full px-4 pb-2">
+      <view class="footer-body flex items-center">
+        <input
+          class="flex-1"
+          placeholder="请输入内容"
+          v-model="msg"
+          @keydown.enter="sendMsg"
+        />
+        <uni-icons
+          @click="sendMsg"
+          type="arrow-up"
+          size="20"
+          class="submitIcon"
+          :class="{ isDiabled: !msg }"
+          color="#ffffff"
+        ></uni-icons>
+      </view>
     </view>
   </view>
 </template>
 
-<script>
+<script setup>
+import { ref, shallowReactive } from "vue";
 import { postChat } from "../../request/api";
-
-export default {
-  data() {
-    return {
-      title: "",
-      msg: "",
-    };
-  },
-  onLoad() {},
-  methods: {
-    sendMsg() {
-      postChat({ content: this.msg }).then((res) => {
-        this.title = res;
-      });
-    },
-  },
+const msg = ref("");
+const messages = shallowReactive([]);
+const sendMsg = () => {
+  messages.push({ type: "sent", content: msg.value });
+  const parms = { content: msg.value };
+  msg.value = "";
+  postChat(parms).then((res) => {
+    messages.push({ type: "received", content: res });
+  });
 };
 </script>
 
-<style>
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+<style scoped lang="scss">
+.footer-body {
+  background-color: #f4f4f4;
+  padding: 8px 16px;
+  border-radius: 26px;
+
+  .submitIcon {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #f4f4f4;
+    background-color: #252525;
+
+    &.isDiabled {
+      background-color: #d7d7d7;
+    }
+  }
 }
 
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
-}
-
-.text-area {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
+.page-msg {
+  margin-bottom: 54px;
 }
 </style>
