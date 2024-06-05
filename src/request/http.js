@@ -1,6 +1,6 @@
 // 全局请求封装
-// const base_url = 'http://pl-fe.cn:10011'
-const base_url = 'http://localhost:3000'
+const base_url = 'https://chat.pl-fe.cn'
+// const base_url = 'http://localhost:3000'
 // 请求超出时间
 const timeout = 20 * 1000
 

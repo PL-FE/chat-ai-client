@@ -1,18 +1,26 @@
 <template>
-  <view class="page-content h-fit">
+  <view class="page page-content h-full">
     <scroll-view class="chat-content" scroll-y>
       <view
         v-for="(message, index) in messages"
         :key="index"
         class="message-item"
       >
-        <view v-if="message.type === 'sent'" class="sent-message">{{
-          message.content
-        }}</view>
-        <view v-else class="received-message">{{ message.content }}</view>
+        <view v-if="message.type === 'sent'" class="sent-message">
+          <span class="sent-message-body">
+            {{ message.content }}
+          </span>
+        </view>
+        <view v-else class="received-message flex">
+          <span class="pr-2">
+            <uni-icons type="smallcircle" size="24"></uni-icons>
+          </span>
+          <!-- <span v-html="message.content"> </span> -->
+          <ua-markdown :source="message.content" class="flex-1 overflow-auto" />
+        </view>
       </view>
     </scroll-view>
-    <view class="footer absolute bottom-0 w-full px-4 pb-2">
+    <view class="footer w-full px-4 py-2">
       <view class="footer-body flex items-center">
         <input
           class="flex-1"
@@ -36,6 +44,7 @@
 <script setup>
 import { ref, shallowReactive } from "vue";
 import { postChat } from "../../request/api";
+
 const msg = ref("");
 const messages = shallowReactive([]);
 const sendMsg = () => {
@@ -43,7 +52,10 @@ const sendMsg = () => {
   const parms = { content: msg.value };
   msg.value = "";
   postChat(parms).then((res) => {
-    messages.push({ type: "received", content: res });
+    if (res) {
+      console.log("res", res);
+      messages.push({ type: "received", content: res });
+    }
   });
 };
 </script>
@@ -71,5 +83,20 @@ const sendMsg = () => {
 
 .page-msg {
   margin-bottom: 54px;
+}
+.message-item {
+  line-height: 30px;
+  padding: 15px 10px;
+  .sent-message {
+    text-align: right;
+  }
+  .sent-message-body {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 20px;
+  }
+}
+.chat-content {
+  height: calc(100% - 65px);
 }
 </style>

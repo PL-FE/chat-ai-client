@@ -16,4 +16,12 @@ export default {
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+uni-page-body,
+html,
+body {
+  height: 100%;
+}
+.page {
+  height: 100%;
+}
 </style>
