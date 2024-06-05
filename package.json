@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev:h5": "uni",
+    "build:h5": "uni build",
     "dev:h5:ssr": "uni --ssr",
     "dev:mp-weixin": "uni -p mp-weixin",
     "build:mp-weixin": "uni build -p mp-weixin"
