@@ -8,7 +8,7 @@ export const postChat = (params) => {
         method: 'post',
         data: JSON.stringify(params),
         header: {
-            // 'Content-Type': 'text/event-stream',
+            'Content-Type': 'text/event-stream',
         } // 自定义
     })
 }
