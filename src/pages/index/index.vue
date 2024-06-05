@@ -49,10 +49,12 @@
 <script setup>
 import { computed, ref, shallowReactive } from "vue";
 import { postChat } from "../../request/api";
+import { getCurrentInstance } from "vue";
+const instance = getCurrentInstance();
 
 const KeyboardHeight = ref(0);
 const msg = ref("");
-const messages = shallowReactive([]);
+const messages = ref([]);
 const loading = ref(false);
 const canSend = computed(() => {
   return msg.value && !loading.value;
@@ -61,27 +63,36 @@ const sendMsg = () => {
   if (!canSend.value) {
     return;
   }
-  messages.push({ type: "sent", content: msg.value });
-  const parms = { content: msg.value };
-  msg.value = "";
+  messages.value.push(
+    { type: "sent", content: msg.value },
+    { type: "received", content: "" }
+  );
   loading.value = true;
-  postChat(parms)
-    .then((res) => {
-      if (res) {
-        console.log("res", res);
-        messages.push({ type: "received", content: res });
-      }
-    })
-    .finally(() => {
+  postChat(
+    msg.value,
+    (res) => {
+      msg.value = "";
+      messages.value.slice(-1)[0].content += handleSse(res);
+    },
+    () => {
       loading.value = false;
-    });
+    }
+  );
 };
 
 if (uni.onKeyboardHeightChange) {
   uni.onKeyboardHeightChange((res) => {
-    console.log("log", res);
     KeyboardHeight.value = res.height + "px";
   });
+}
+
+function handleSse(res) {
+  try {
+    const data = JSON.parse(res);
+    return data.choices[0].delta.content || "";
+  } catch (error) {
+    return "";
+  }
 }
 </script>
 
