@@ -12,7 +12,7 @@
           </span>
         </view>
         <view v-else class="received-message flex">
-          <span class="pr-2">
+          <span class="pr-2 leading-5">
             <uni-icons type="smallcircle" size="21"></uni-icons>
           </span>
           <!-- <span v-html="message.content"> </span> -->
@@ -47,51 +47,52 @@
 </template>
 
 <script setup>
-import { computed, ref, shallowReactive } from "vue";
-import { postChat } from "../../request/api";
-import { getCurrentInstance } from "vue";
-const instance = getCurrentInstance();
+import { computed, nextTick, ref, shallowReactive } from "vue"
+import { postChat } from "../../request/api"
+import { getCurrentInstance } from "vue"
+const instance = getCurrentInstance()
 
-const KeyboardHeight = ref(0);
-const msg = ref("");
-const messages = ref([]);
-const loading = ref(false);
+const KeyboardHeight = ref(0)
+const msg = ref("")
+const messages = ref([])
+const loading = ref(false)
 const canSend = computed(() => {
-  return msg.value && !loading.value;
-});
+  return msg.value && !loading.value
+})
 const sendMsg = () => {
   if (!canSend.value) {
-    return;
+    return
   }
+  const content = msg.value
   messages.value.push(
-    { type: "sent", content: msg.value },
+    { type: "sent", content },
     { type: "received", content: "" }
-  );
-  loading.value = true;
+  )
+  loading.value = true
+  msg.value = ""
   postChat(
-    msg.value,
+    content,
     (res) => {
-      msg.value = "";
-      messages.value.slice(-1)[0].content += handleSse(res);
+      messages.value.slice(-1)[0].content += handleSse(res)
     },
     () => {
-      loading.value = false;
+      loading.value = false
     }
-  );
-};
+  )
+}
 
 if (uni.onKeyboardHeightChange) {
   uni.onKeyboardHeightChange((res) => {
-    KeyboardHeight.value = res.height + "px";
-  });
+    KeyboardHeight.value = res.height + "px"
+  })
 }
 
 function handleSse(res) {
   try {
-    const data = JSON.parse(res);
-    return data.choices[0].delta.content || "";
+    const data = JSON.parse(res)
+    return data.choices[0].delta.content || ""
   } catch (error) {
-    return "";
+    return ""
   }
 }
 </script>
