@@ -15,10 +15,10 @@ jobs:
           node-version: 20
       - name: 打包镜像, 上传 Docker Hub
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
           docker build -t chat-ai-web-image  .
-          docker tag chat-ai-web-image ${{ secrets.DOCKER_REPOSITORY }}
-          docker push ${{ secrets.DOCKER_REPOSITORY }}:latest
+          docker tag chat-ai-web-image registry.cn-hangzhou.aliyuncs.com/pengliang/chat-ai-web
+          docker push registry.cn-hangzhou.aliyuncs.com/pengliang/chat-ai-web:latest
 
       - name: 登录服务器, 执行脚本
         uses: appleboy/ssh-action@master
@@ -29,6 +29,6 @@ jobs:
           script: |
             docker stop chat-ai-web
             docker rm chat-ai-web
-            docker rmi ${{ secrets.DOCKER_REPOSITORY }}:latest
-            docker pull ${{ secrets.DOCKER_REPOSITORY }}:latest
-            docker run -d -p 10012:80 --name chat-ai-web ${{ secrets.DOCKER_REPOSITORY }}:latest
+            docker rmi chat-ai-web:latest
+            docker pull registry.cn-hangzhou.aliyuncs.com/pengliang/chat-ai-web:latest
+            docker run -d -p 10012:80 --name chat-ai-web chat-ai-web:latest
