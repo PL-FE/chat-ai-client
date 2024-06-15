@@ -31,4 +31,4 @@ jobs:
             docker rm chat-ai-web
             docker rmi chat-ai-web:latest
             docker pull registry.cn-hangzhou.aliyuncs.com/pengliang/chat-ai-web:latest
-            docker run -d -p 10012:80 --name chat-ai-web chat-ai-web:latest
+            docker run -d -p 10012:80 --name chat-ai-web registry.cn-hangzhou.aliyuncs.com/pengliang/chat-ai-web:latest
